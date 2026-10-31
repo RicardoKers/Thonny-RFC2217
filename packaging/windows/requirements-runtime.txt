@@ -1,0 +1,10 @@
+# Distribution dependencies; project wheels are built from the included sources.
+pyserial==3.5
+websockets==17.4
+basedpyright==1.40.2
+nodejs-wheel-binaries==24.19.0
+paramiko==5.1.0
+esptool==5.6.0
+adafruit-board-toolkit==1.1.0
+jedi==0.20.0
+parso==0.8.7

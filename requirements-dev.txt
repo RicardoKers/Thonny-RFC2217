@@ -1,0 +1,12 @@
+# Runtime dependencies come from the editable Minny and Thonny projects.
+pytest>=8.4.1
+syrupy
+ruff>=0.16.0
+black>=24.8.0
+isort>=5.13.2
+pyrefly>=0.29.0
+types-pyserial
+# Used by Thonny's existing syntax-highlighting tests.
+parso
+# Thonny's development GUI starts this language server via PATH.
+basedpyright

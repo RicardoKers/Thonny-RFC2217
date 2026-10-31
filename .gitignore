@@ -1,0 +1,16 @@
+.venv/
+.thonny-user/
+test-results/
+build/
+dist/
+artifacts/
+release-source/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.pyc
+*.pyo
+*.egg-info/
+
+build-tools/
+*.whl

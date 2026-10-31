@@ -1,0 +1,83 @@
+[build-system]
+requires = ["uv_build>=0.7.20,<0.8.0"]
+build-backend = "uv_build"
+
+[project]
+name = "minny"
+version = "0.0.1a2"
+dependencies = [
+    "packaging",
+    "pyserial",
+    "websockets",
+]
+requires-python = ">=3.11"
+authors = [
+  {name = "Aivar Annamaa", email = "aivarannamaa@users.noreply.github.com"},
+]
+description = "Package and project manager for MicroPython and CircuitPython"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICEN[CS]E.*"]
+keywords = ["MicroPython", "CircuitPython"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python"
+]
+
+[project.optional-dependencies]
+ssh = ["paramiko"]
+unix = ["ptyprocess"]
+
+[project.urls]
+Source = "https://github.com/aivarannamaa/minny"
+Issues = "https://github.com/aivarannamaa/minny/issues"
+Documentation = "https://github.com/aivarannamaa/minny/blob/main/README.md"
+Changelog = "https://github.com/aivarannamaa/minny/blob/main/CHANGELOG.md"
+
+[tool.uv]
+preview-features = ["malware-check"]
+
+[tool.uv.audit]
+malware-check = true
+
+[tool.ruff]
+line-length = 100
+# Exclude a variety of commonly ignored directories.
+exclude = [".venv", ".git", "dist", "docs", "misc", "out", "tests/data"]
+
+[tool.ruff.lint]
+extend-select = ["FURB"]
+ignore = [
+    "SIM103",
+    "BLE001",
+    "FURB171",
+    "UP012",
+    "UP031", # TODO
+]
+
+[tool.ty.src]
+include = ["src", "tests"]
+exclude = ["tests/data"]
+
+[tool.pyrefly]
+project-includes = ["src", "tests"]
+project-excludes = ["tests/data"]
+search-path = ["src", "tests"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.1",
+    "syrupy",
+    "ruff>=0.16.0",
+    "ty>=0.0.1a19",
+    "pyrefly>=0.29.0",
+    "types-pyserial",
+    # extras
+    "paramiko",
+    "ptyprocess"
+]
+
+[tool.pytest.ini_options]
+markers = [
+    "slow"
+]

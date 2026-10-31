@@ -1,0 +1,12 @@
+{
+  "thonny": {
+    "upstream": "https://github.com/thonny/thonny.git",
+    "revision": "5781c463e3b8718e29198f303431a8e502342929",
+    "tracked_files": 2204
+  },
+  "minny": {
+    "upstream": "https://github.com/aivarannamaa/minny.git",
+    "revision": "ebc4192db572390a927b74ab34f72f7a6c25ee8d",
+    "tracked_files": 169
+  }
+}
