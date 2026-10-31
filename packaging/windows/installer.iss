@@ -1,7 +1,7 @@
 ; Build with ISCC /DSourceFolder=<absolute bundle path> /DOutputDir=<dist path>.
 ; This is an independent, unofficial distribution. It does not upgrade Thonny.
 #ifndef AppVersion
-  #define AppVersion "0.1.0"
+  #define AppVersion "0.1.1"
 #endif
 #ifndef SourceFolder
   #error SourceFolder must point to the prepared application bundle
@@ -11,7 +11,11 @@
 #endif
 
 [Setup]
+#ifdef ValidationBuild
+AppId=RicardoKers.ThonnyRFC2217.Validation
+#else
 AppId=RicardoKers.ThonnyRFC2217
+#endif
 AppName=Thonny RFC2217
 AppVersion={#AppVersion}
 AppVerName=Thonny RFC2217 {#AppVersion}
@@ -31,7 +35,7 @@ ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 OutputDir={#OutputDir}
 OutputBaseFilename=Thonny-RFC2217-{#AppVersion}-windows-x64-setup
-Compression=lzma2
+Compression=lzma2/ultra64
 SolidCompression=yes
 WizardStyle=modern
 DisableWelcomePage=no
@@ -58,7 +62,16 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 ; User settings and portable-mode markers belong to the portable ZIP only.
-Source: "{#SourceFolder}\*"; DestDir: "{app}"; Excludes: "user_data\*,.portable,portable.ini,portable_thonny.ini,runtime\portable_thonny.ini"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#SourceFolder}\*"; DestDir: "{app}"; Excludes: "user_data\*,.portable,portable.ini,portable_thonny.ini,runtime\portable_thonny.ini,*.pyc,*.pyo,.pytest_cache\*"; Flags: ignoreversion recursesubdirs createallsubdirs
+
+[InstallDelete]
+; A 0.1.0 upgrade must not leave the removed auxiliaries on disk. Restrict
+; cleanup to our own marked distribution, never a generic Python/Thonny folder.
+Type: filesandordirs; Name: "{app}\Lib\test"; Check: IsOurExistingInstallation
+Type: filesandordirs; Name: "{app}\Lib\site-packages\nodejs_wheel\lib"; Check: IsOurExistingInstallation
+Type: filesandordirs; Name: "{app}\Lib\site-packages\jedi"; Check: IsOurExistingInstallation
+Type: filesandordirs; Name: "{app}\Lib\site-packages\jedi-0.20.0.dist-info"; Check: IsOurExistingInstallation
+Type: files; Name: "{app}\Lib\site-packages\basedpyright\dist\pyright*.js.map"; Check: IsOurExistingInstallation
 
 [Icons]
 Name: "{group}\Thonny RFC2217"; Filename: "{app}\ThonnyRFC2217.exe"; WorkingDir: "{app}"; AppUserModelID: "RicardoKers.ThonnyRFC2217"
@@ -69,3 +82,22 @@ Filename: "{app}\ThonnyRFC2217.exe"; Description: "{cm:LaunchProgram,Thonny RFC2
 
 ; No file associations, original-Thonny registry keys, bulk upgrade deletions,
 ; or wildcard UninstallDelete entries. Inno removes only installed files.
+
+[Code]
+function IsOurExistingInstallation: Boolean;
+var
+  Metadata: AnsiString;
+begin
+  Result := False;
+  if not FileExists(ExpandConstant('{app}\ThonnyRFC2217.exe')) then
+    exit;
+  if LoadStringFromFile(ExpandConstant('{app}\distribution.json'), Metadata) then
+    Result := Pos('"distribution": "Thonny RFC2217"', String(Metadata)) > 0;
+end;
+
+function PrepareToInstall(var NeedsRestart: Boolean): String;
+begin
+  Result := '';
+  if FileExists(ExpandConstant('{app}\python.exe')) and not IsOurExistingInstallation then
+    Result := 'This folder already contains another Python or Thonny installation. Choose a separate folder for Thonny RFC2217.';
+end;

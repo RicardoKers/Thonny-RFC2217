@@ -2,14 +2,16 @@
 
 Versão independente do Thonny com conexão nativa RFC 2217 para MicroPython. Permite usar um console serial remoto por TCP/IP, sem criar portas COM virtuais. O SimNodus é o dispositivo de referência dos testes; o transporte funciona por meio do cliente genérico do PySerial.
 
-**Projeto não oficial / Unofficial distribution.** Esta distribuição é baseada no **Thonny 6.0.0.dev1** e no **Minny 0.0.1a2**, com alterações locais descritas em [PROVENANCE.md](PROVENANCE.md). Não é uma release oficial dos mantenedores do Thonny. A versão `0.1.0` identifica esta distribuição e é destinada a testes.
+**Projeto não oficial / Unofficial distribution.** Esta distribuição é baseada no **Thonny 6.0.0.dev1** e no **Minny 0.0.1a2**, com alterações locais descritas em [PROVENANCE.md](PROVENANCE.md). Não é uma release oficial dos mantenedores do Thonny. A versão `0.1.1` identifica esta distribuição e é destinada a testes.
 
 ## Windows
 
-Baixe a [release 0.1.0](https://github.com/RicardoKers/Thonny-RFC2217/releases/tag/v0.1.0):
+Baixe a [release 0.1.1](https://github.com/RicardoKers/Thonny-RFC2217/releases/tag/v0.1.1):
 
-- [Instalador Windows x64 (.exe)](https://github.com/RicardoKers/Thonny-RFC2217/releases/download/v0.1.0/Thonny-RFC2217-0.1.0-windows-x64-setup.exe): instale e abra **Thonny RFC2217** pelo menu Iniciar.
-- [Versão portátil (.zip)](https://github.com/RicardoKers/Thonny-RFC2217/releases/download/v0.1.0/Thonny-RFC2217-0.1.0-windows-x64-portable.zip): extraia a pasta completa e abra **ThonnyRFC2217.exe**. Mantenha `portable.ini` para guardar a configuração em `user_data` nessa pasta.
+A versão 0.1.1 reduz o instalador de 73,2 MB para 58,9 MB e o ZIP de 117,9 MB para 96,6 MB. Remove testes do Python, npm/Corepack, mapas de depuração JavaScript e Jedi, que não é usado pelo Thonny atual. Node, Basedpyright, stubs, autocompletação e diagnósticos permanecem incluídos. Feche a aplicação antes de atualizar; o instalador remove os auxiliares antigos e preserva o perfil. Para a versão portátil, extraia em uma pasta nova e copie `user_data` se quiser manter as configurações.
+
+- [Instalador Windows x64 (.exe)](https://github.com/RicardoKers/Thonny-RFC2217/releases/download/v0.1.1/Thonny-RFC2217-0.1.1-windows-x64-setup.exe): instale e abra **Thonny RFC2217** pelo menu Iniciar.
+- [Versão portátil (.zip)](https://github.com/RicardoKers/Thonny-RFC2217/releases/download/v0.1.1/Thonny-RFC2217-0.1.1-windows-x64-portable.zip): extraia a pasta completa e abra **ThonnyRFC2217.exe**. Mantenha `portable.ini` para guardar a configuração em `user_data` nessa pasta.
 
 Python, Tcl/Tk, Node e dependências estão incluídos. Não é necessário instalar Python separadamente. Requisitos: Windows 10/11 x64 e .NET Framework 4.x. O instalador usa identidade própria e o perfil fica em `%LOCALAPPDATA%/ThonnyRFC2217`; a versão portátil usa `user_data`. Os executáveis são não assinados digitalmente. Consulte [RELEASE_TEST_REPORT.md](RELEASE_TEST_REPORT.md) e os checksums da release.
 

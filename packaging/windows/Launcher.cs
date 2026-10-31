@@ -9,8 +9,8 @@ using System.Reflection;
 [assembly: AssemblyTitle("Thonny RFC2217")]
 [assembly: AssemblyProduct("Thonny RFC2217 (unofficial)")]
 [assembly: AssemblyCompany("RicardoKers")]
-[assembly: AssemblyVersion("0.1.0.0")]
-[assembly: AssemblyFileVersion("0.1.0.0")]
+[assembly: AssemblyVersion("0.1.1.0")]
+[assembly: AssemblyFileVersion("0.1.1.0")]
 
 internal static class Launcher
 {

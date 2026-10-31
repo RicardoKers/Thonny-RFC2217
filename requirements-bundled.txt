@@ -19,7 +19,6 @@ esptool==5.6.0
 intelhex==2.3.0
 invoke==3.0.3
 isort==9.0.2
-jedi==0.20.0
 librt==0.16.0
 markdown-it-py==4.2.0
 mccabe==0.7.0

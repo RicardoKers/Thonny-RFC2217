@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -68,7 +69,7 @@ def main():
     parser.add_argument("--source-root", type=Path, default=HERE.parents[1])
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--base-python", type=Path, default=Path(sys.base_prefix))
-    parser.add_argument("--version", default="0.1.0")
+    parser.add_argument("--version", default="0.1.1")
     parser.add_argument("--reuse", action="store_true")
     args = parser.parse_args()
     source = args.source_root.resolve()
@@ -117,6 +118,9 @@ def main():
         ],
         env=env,
     )
+    # Jedi belonged to an older bundle recipe. Current Thonny uses Basedpyright
+    # and does not depend on it; also remove it when reusing an older bundle.
+    run([python, "-I", "-m", "pip", "uninstall", "-y", "jedi"], env=env)
     run([python, "-I", "-m", "pip", "check"], env=env)
     make_portable_scripts(python, bundle, env)
     for name in ["launch_thonny.py"]:
@@ -128,6 +132,18 @@ def main():
     (bundle / "licenses/minny").mkdir(parents=True, exist_ok=True)
     shutil.copy2(source / "minny/LICENSE", bundle / "licenses/minny/LICENSE")
     compiler = Path(os.environ["WINDIR"]) / "Microsoft.NET/Framework64/v4.0.30319/csc.exe"
+    version_parts = args.version.split(".")
+    if len(version_parts) > 4 or not all(part.isdecimal() for part in version_parts):
+        raise SystemExit("Use a numeric distribution version, such as 0.1.1.")
+    file_version = ".".join(version_parts + ["0"] * (4 - len(version_parts)))
+    launcher_text = (HERE / "Launcher.cs").read_text(encoding="utf-8")
+    launcher_text = re.sub(
+        r'(Assembly(?:File)?Version\(")[0-9.]+("\))',
+        lambda match: match[1] + file_version + match[2],
+        launcher_text,
+    )
+    launcher_source = bundle.parent / ("Launcher-" + args.version + ".cs")
+    launcher_source.write_text(launcher_text, encoding="utf-8")
     run(
         [
             compiler,
@@ -139,7 +155,7 @@ def main():
             "/reference:System.Core.dll",
             f"/win32icon:{source / 'thonny/thonny/res/thonny.ico'}",
             f"/out:{bundle / 'ThonnyRFC2217.exe'}",
-            HERE / "Launcher.cs",
+            launcher_source,
         ]
     )
     run([python, "-I", bundle / "launch_thonny.py", "--smoke-test"], env=env)
@@ -170,6 +186,17 @@ def main():
     # Compiled caches embed build-machine paths and can be recreated at runtime.
     for path in bundle.rglob("*.pyc"):
         path.unlink()
+    run(
+        [
+            sys.executable,
+            HERE / "prune_bundle.py",
+            "--bundle",
+            bundle,
+            "--report",
+            bundle.parent / ("pruning-" + args.version + ".json"),
+        ]
+    )
+    run([python, "-I", bundle / "launch_thonny.py", "--smoke-test"], env=env)
     print("Bundle ready:", bundle, flush=True)
 
 

@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string]$Version = '0.1.0',
+    [string]$Version = '0.1.1',
     [string]$SourceRoot = (Split-Path -Parent $PSScriptRoot),
     [string]$OutputDirectory = '',
     [switch]$Reuse,
